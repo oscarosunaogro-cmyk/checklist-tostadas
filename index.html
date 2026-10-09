@@ -246,6 +246,19 @@
   textarea{ min-height:64px; }
   textarea:focus, .text-input:focus{ outline:2px solid var(--navy); outline-offset:1px; background:#fff; }
 
+  /* ---------- BRISA ---------- */
+  .brisa-check{
+    display:flex; align-items:flex-start; gap:10px; margin-top:16px;
+    padding:12px 14px; border:1px solid var(--line); border-radius:10px;
+    background:var(--bg); cursor:pointer; user-select:none;
+  }
+  .brisa-check.checked{ border-color:#B9DCC5; background:var(--green-soft); }
+  .brisa-check input{ width:20px; height:20px; margin-top:1px; accent-color:var(--green); flex:0 0 auto; cursor:pointer; }
+  .brisa-check .t{ font-size:13.5px; font-weight:600; line-height:1.3; }
+  .brisa-check .s{ display:block; font-family:var(--mono); font-size:11px; color:var(--text-mut); font-weight:400; margin-top:3px; }
+  .brisa-tag{ font-weight:600; color:var(--green); }
+  .brisa-tag.off{ color:var(--orange); }
+
   .modal-footer{
     display:flex; gap:10px; margin-top:20px;
   }
@@ -304,6 +317,8 @@
       <option value="">Todos los estados</option>
       <option value="pending">Pendientes</option>
       <option value="confirmed">Confirmadas</option>
+      <option value="brisa_pending">Confirmadas sin BRISA</option>
+      <option value="brisa_done">Descargadas en BRISA</option>
     </select>
     <button class="btn-export" id="exportBtn">⬇ Exportar a Excel</button>
   </div>
@@ -331,7 +346,278 @@
 
 <script>
 /* ============ DATA ============ */
-const STORES = [{"region": "VERACRUZ NORTE", "zona": "TANTOYUCA", "idTienda": 2858, "tienda": "TANTOYUCA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 41, "existCajas": 3}, {"region": "VERACRUZ NORTE", "zona": "TANTOYUCA", "idTienda": 1792, "tienda": "MI TANTOYUCA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 36, "existCajas": 3}, {"region": "VERACRUZ NORTE", "zona": "TANTOYUCA", "idTienda": 622, "tienda": "TEMPOAL", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 33, "existCajas": 3}, {"region": "VERACRUZ SUR", "zona": "CORDOBA", "idTienda": 335, "tienda": "COSOLAPA MERCADO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 27, "existCajas": 2}, {"region": "VERACRUZ SUR", "zona": "PINERA", "idTienda": 333, "tienda": "LOMA BONITA MERCADO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 27, "existCajas": 2}, {"region": "VERACRUZ NORTE", "zona": "TANTOYUCA", "idTienda": 760, "tienda": "TANTOYUCA CALLE 12 DE JULIO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 25, "existCajas": 2}, {"region": "VERACRUZ CENTRO", "zona": "COSTA ESMERALDA", "idTienda": 2867, "tienda": "MISANTLA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 25, "existCajas": 2}, {"region": "VERACRUZ NORTE", "zona": "PAPANTLA", "idTienda": 266, "tienda": "HUEHUETLA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 24, "existCajas": 2}, {"region": "VERACRUZ SUR", "zona": "PINERA", "idTienda": 734, "tienda": "TUXTEPEC HIDALGO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 24, "existCajas": 2}, {"region": "VERACRUZ NORTE", "zona": "HUAUCHINANGO", "idTienda": 4509, "tienda": "HUAUCHINANGO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 23, "existCajas": 2}, {"region": "VERACRUZ CENTRO", "zona": "BOCA DEL RIO", "idTienda": 565, "tienda": "CALLE 8 COL CARRANZA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 22, "existCajas": 2}, {"region": "VERACRUZ NORTE", "zona": "TAMPICO SUR", "idTienda": 1246, "tienda": "MADERO SANTA ELENA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 22, "existCajas": 2}, {"region": "VERACRUZ CENTRO", "zona": "XALAPA", "idTienda": 1125, "tienda": "COACOATZINTLA VER", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 22, "existCajas": 2}, {"region": "VERACRUZ CENTRO", "zona": "TEZIUTLAN", "idTienda": 2520, "tienda": "ALTOTONGA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 22, "existCajas": 2}, {"region": "VERACRUZ SUR", "zona": "ALVARADO", "idTienda": 2856, "tienda": "ALVARADO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 22, "existCajas": 2}, {"region": "VERACRUZ CENTRO", "zona": "COSTA ESMERALDA", "idTienda": 735, "tienda": "CASITAS VERACRUZ", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 21, "existCajas": 2}, {"region": "VERACRUZ SUR", "zona": "PUERTO", "idTienda": 1637, "tienda": "LOS LAGOS", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 20, "existCajas": 2}, {"region": "VERACRUZ SUR", "zona": "CUENCA", "idTienda": 315, "tienda": "TEMASCAL", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 19, "existCajas": 2}, {"region": "VERACRUZ SUR", "zona": "PINERA", "idTienda": 520, "tienda": "TUXTEPEC CARRANZA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 19, "existCajas": 2}, {"region": "VERACRUZ NORTE", "zona": "HUAUCHINANGO", "idTienda": 9040, "tienda": "CEIBA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 19, "existCajas": 2}, {"region": "VERACRUZ CENTRO", "zona": "PORTUARIA", "idTienda": 214, "tienda": "PLAYA LINDA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 18, "existCajas": 2}, {"region": "VERACRUZ SUR", "zona": "TUXTEPEC", "idTienda": 364, "tienda": "VALLE NACIONAL", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 18, "existCajas": 2}, {"region": "VERACRUZ CENTRO", "zona": "COSTA ESMERALDA", "idTienda": 673, "tienda": "INDEPENDENCIA MARTINEZ", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 18, "existCajas": 2}, {"region": "VERACRUZ NORTE", "zona": "TUXPAN", "idTienda": 1009, "tienda": "CERRO AZUL LA CURVA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 18, "existCajas": 2}, {"region": "VERACRUZ NORTE", "zona": "TAMPICO SUR", "idTienda": 1094, "tienda": "ALTAMIRA LAGUNA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 18, "existCajas": 2}, {"region": "VERACRUZ SUR", "zona": "ALVARADO", "idTienda": 1530, "tienda": "CARRILLO CRUCERO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 18, "existCajas": 2}, {"region": "VERACRUZ SUR", "zona": "PINERA", "idTienda": 1785, "tienda": "LOMA BONITA CENTRO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 18, "existCajas": 2}, {"region": "VERACRUZ CENTRO", "zona": "XALAPA", "idTienda": 2857, "tienda": "EBANO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 18, "existCajas": 2}, {"region": "VERACRUZ NORTE", "zona": "POZA RICA", "idTienda": 223, "tienda": "PASEO LA BURRITA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 17, "existCajas": 1}, {"region": "VERACRUZ CENTRO", "zona": "TEZIUTLAN", "idTienda": 2864, "tienda": "TLAPACOYAN", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 17, "existCajas": 1}, {"region": "VERACRUZ CENTRO", "zona": "COSTA ESMERALDA", "idTienda": 8932, "tienda": "MARTINEZ DE LA TORRE", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 17, "existCajas": 1}, {"region": "VERACRUZ SUR", "zona": "PUERTO", "idTienda": 503, "tienda": "JAMAPA ORIENTE", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 16, "existCajas": 1}, {"region": "VERACRUZ CENTRO", "zona": "COSTA ESMERALDA", "idTienda": 703, "tienda": "CARRANZA 5 DE MAYO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 16, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "HUAUCHINANGO", "idTienda": 879, "tienda": "METLALTOYUCA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 16, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "POZA RICA", "idTienda": 1259, "tienda": "AGUA FRIA KIOSKO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 16, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "PAPANTLA", "idTienda": 1152, "tienda": "PAPANTLA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 16, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "ALAMO", "idTienda": 1316, "tienda": "IXHUATLAN CENTRO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 16, "existCajas": 1}, {"region": "VERACRUZ SUR", "zona": "ALVARADO", "idTienda": 2845, "tienda": "TLACOTALPAN", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 16, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "PAPANTLA", "idTienda": 254, "tienda": "ENTABLADERO BENITO JUAREZ", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 15, "existCajas": 1}, {"region": "VERACRUZ SUR", "zona": "TUXTEPEC", "idTienda": 493, "tienda": "TUXTEPEC CENTRO 2", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 15, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "PAPANTLA", "idTienda": 502, "tienda": "ZOZOCOLCO CENTRO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 15, "existCajas": 1}, {"region": "VERACRUZ CENTRO", "zona": "TEZIUTLAN", "idTienda": 618, "tienda": "ALTOTONGA HIDALGO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 15, "existCajas": 1}, {"region": "VERACRUZ CENTRO", "zona": "COATEPEC", "idTienda": 812, "tienda": "COSAUTLAN VERACRUZ", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 15, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "HUEJUTLA", "idTienda": 1426, "tienda": "HUEJUTLA MERCADO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 15, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "TUXPAN", "idTienda": 2868, "tienda": "NARANJOS", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 15, "existCajas": 1}, {"region": "VERACRUZ CENTRO", "zona": "XALAPA", "idTienda": 240, "tienda": "ALTO LUCERO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 14, "existCajas": 1}, {"region": "VERACRUZ SUR", "zona": "ORIZABA", "idTienda": 371, "tienda": "ACATLAN CENTRO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 14, "existCajas": 1}, {"region": "VERACRUZ CENTRO", "zona": "COSTA ESMERALDA", "idTienda": 736, "tienda": "MARIA DE LA TORRE", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 14, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "PAPANTLA", "idTienda": 652, "tienda": "FILOMENO MATA 5 DE MAYO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 14, "existCajas": 1}, {"region": "VERACRUZ SUR", "zona": "TUXTEPEC", "idTienda": 1157, "tienda": "SAN JOSE CHILTEPEC", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 14, "existCajas": 1}, {"region": "VERACRUZ SUR", "zona": "CAFETALERA", "idTienda": 1742, "tienda": "MONTE BLANCO CENTRO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 14, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "ALAMO", "idTienda": 2865, "tienda": "ALAMO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 14, "existCajas": 1}, {"region": "VERACRUZ CENTRO", "zona": "COATEPEC", "idTienda": 9021, "tienda": "LAGOS", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 14, "existCajas": 1}, {"region": "VERACRUZ CENTRO", "zona": "XALAPA", "idTienda": 263, "tienda": "NAOLINCO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 13, "existCajas": 1}, {"region": "VERACRUZ CENTRO", "zona": "COATEPEC", "idTienda": 125, "tienda": "TEOCELO 5 DE MAYO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 13, "existCajas": 1}, {"region": "VERACRUZ CENTRO", "zona": "XALAPA", "idTienda": 591, "tienda": "PEROTE ALDAMA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 13, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "TAMPICO SUR", "idTienda": 986, "tienda": "ESTACION MANUEL", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 13, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "HUAUCHINANGO", "idTienda": 1307, "tienda": "MECAPALAPA PUEBLA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 13, "existCajas": 1}, {"region": "VERACRUZ CENTRO", "zona": "CARDEL", "idTienda": 1349, "tienda": "TIERRA COLORADA VER", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 13, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "TAMPICO NORTE", "idTienda": 1404, "tienda": "TAMPICO CALLE HEROES CENTRO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 13, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "TUXPAN", "idTienda": 9023, "tienda": "TUXPAN RADIO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 13, "existCajas": 1}, {"region": "VERACRUZ CENTRO", "zona": "PORTUARIA", "idTienda": 338, "tienda": "RIO MEDIO 4", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 12, "existCajas": 1}, {"region": "VERACRUZ SUR", "zona": "CAFETALERA", "idTienda": 571, "tienda": "POTRERO NUEVO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 12, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "HUEJUTLA", "idTienda": 721, "tienda": "JALTOCAN", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 12, "existCajas": 1}, {"region": "VERACRUZ CENTRO", "zona": "HEROICA", "idTienda": 1020, "tienda": "AMAPOLAS PUERTO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 12, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "TUXPAN", "idTienda": 1209, "tienda": "TUXPAN LOS CABOS", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 12, "existCajas": 1}, {"region": "VERACRUZ SUR", "zona": "PUERTO", "idTienda": 1355, "tienda": "ANTON LIZARDO AZUETA II", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 12, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "HUEJUTLA", "idTienda": 1497, "tienda": "CHICONTEPEC CENTRO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 12, "existCajas": 1}, {"region": "VERACRUZ CENTRO", "zona": "PORTUARIA", "idTienda": 1559, "tienda": "LA ROTONDA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 12, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "HUEJUTLA", "idTienda": 1597, "tienda": "HUEJUTLA CHACATITLA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 12, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "ALAMO", "idTienda": 9049, "tienda": "LLANO EN MEDIO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 12, "existCajas": 1}, {"region": "VERACRUZ CENTRO", "zona": "CARDEL", "idTienda": 9019, "tienda": "Cempoala", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 12, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "GUTIERREZ ZAMORA", "idTienda": 9080, "tienda": "MARIANO ARISTA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 12, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "HUAUCHINANGO", "idTienda": 9067, "tienda": "LA UNO 12 DE DICIEMBRE", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 12, "existCajas": 1}, {"region": "VERACRUZ CENTRO", "zona": "XALAPA", "idTienda": 111, "tienda": "XALAPA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 11, "existCajas": 1}, {"region": "VERACRUZ SUR", "zona": "PUERTO", "idTienda": 575, "tienda": "COTAXTLA JUAREZ", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 11, "existCajas": 1}, {"region": "VERACRUZ SUR", "zona": "CORDOBA", "idTienda": 1012, "tienda": "MALTRATA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 11, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "TAMPICO NORTE", "idTienda": 959, "tienda": "TAMPICO PALAFOX", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 11, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "TUXPAN", "idTienda": 931, "tienda": "MERCADO HEROES 47 TUXPAN", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 11, "existCajas": 1}, {"region": "VERACRUZ SUR", "zona": "CORDOBA", "idTienda": 1153, "tienda": "TEZONAPA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 11, "existCajas": 1}, {"region": "VERACRUZ SUR", "zona": "CAFETALERA", "idTienda": 1502, "tienda": "AV 6 CORDOBA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 11, "existCajas": 1}, {"region": "VERACRUZ SUR", "zona": "ORIZABA", "idTienda": 1659, "tienda": "CUICHAPA CENTRO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 11, "existCajas": 1}, {"region": "VERACRUZ CENTRO", "zona": "COATEPEC", "idTienda": 8939, "tienda": "GALVAN", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 11, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "POZA RICA", "idTienda": 9037, "tienda": "LA BURRITA MERCADO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 11, "existCajas": 1}, {"region": "VERACRUZ SUR", "zona": "PINERA", "idTienda": 9046, "tienda": "TUXTEPEC JUAREZ", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 11, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "ALAMO", "idTienda": 9097, "tienda": "TIHUATLAN", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 11, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "ALAMO", "idTienda": 566, "tienda": "TIHUATLAN CUAUHTEMOC", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 10, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "GUTIERREZ ZAMORA", "idTienda": 1158, "tienda": "REFORMA COATZINTLA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 10, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "POZA RICA", "idTienda": 1504, "tienda": "ABASTO PLAN DE AYALA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 10, "existCajas": 1}, {"region": "VERACRUZ SUR", "zona": "ALVARADO", "idTienda": 3455, "tienda": "COSAMALOAPAN", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 10, "existCajas": 1}, {"region": "VERACRUZ SUR", "zona": "CUENCA", "idTienda": 1844, "tienda": "SAN BARTOLO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 10, "existCajas": 1}, {"region": "VERACRUZ CENTRO", "zona": "COATEPEC", "idTienda": 9011, "tienda": "MARIANO ABASOLO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 10, "existCajas": 1}, {"region": "VERACRUZ SUR", "zona": "PINERA", "idTienda": 147, "tienda": "JOSE AZUETA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 9, "existCajas": 1}, {"region": "VERACRUZ CENTRO", "zona": "COATEPEC", "idTienda": 135, "tienda": "MARTIRES DEL 28", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 9, "existCajas": 1}, {"region": "VERACRUZ SUR", "zona": "CAFETALERA", "idTienda": 471, "tienda": "PASO DEL MACHO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 9, "existCajas": 1}, {"region": "VERACRUZ CENTRO", "zona": "COATEPEC", "idTienda": 504, "tienda": "TLALNEHUAYOCAN", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 9, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "TAMPICO NORTE", "idTienda": 369, "tienda": "PANUCO ABASTO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 9, "existCajas": 1}, {"region": "VERACRUZ CENTRO", "zona": "COSTA ESMERALDA", "idTienda": 704, "tienda": "REVOLUCION SAN RAFAEL", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 9, "existCajas": 1}, {"region": "VERACRUZ CENTRO", "zona": "PORTUARIA", "idTienda": 822, "tienda": "MATAMOROS PINOS", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 9, "existCajas": 1}, {"region": "VERACRUZ SUR", "zona": "CUENCA", "idTienda": 1438, "tienda": "TIERRA BLANCA PLAZA CENTRO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 9, "existCajas": 1}, {"region": "VERACRUZ SUR", "zona": "CAFETALERA", "idTienda": 7231, "tienda": "Cordoba Mercado", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 9, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "PAPANTLA", "idTienda": 9048, "tienda": "NINO ARTILLERO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 9, "existCajas": 1}, {"region": "VERACRUZ SUR", "zona": "ORIZABA", "idTienda": 8953, "tienda": "PIEDRAS NEGRAS", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 9, "existCajas": 1}, {"region": "VERACRUZ SUR", "zona": "ALVARADO", "idTienda": 9094, "tienda": "ALVARADO MERCADO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 9, "existCajas": 1}, {"region": "VERACRUZ CENTRO", "zona": "TEZIUTLAN", "idTienda": 352, "tienda": "HUEYTAMALCO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 8, "existCajas": 1}, {"region": "VERACRUZ CENTRO", "zona": "CARDEL", "idTienda": 426, "tienda": "PASO DE OVEJAS INSURGENTES 1", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 8, "existCajas": 1}, {"region": "VERACRUZ SUR", "zona": "TUXTEPEC", "idTienda": 680, "tienda": "OJITLAN II", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 8, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "TANTOYUCA", "idTienda": 592, "tienda": "PLATON SANCHEZ", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 8, "existCajas": 1}, {"region": "VERACRUZ CENTRO", "zona": "HEROICA", "idTienda": 1002, "tienda": "DOS LOMAS", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 8, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "TUXPAN", "idTienda": 1187, "tienda": "PUEBLO VIEJO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 8, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "GUTIERREZ ZAMORA", "idTienda": 1321, "tienda": "LA PETROMEX", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 8, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "ALAMO", "idTienda": 1411, "tienda": "IXCATEPEC", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 8, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "TANTOYUCA", "idTienda": 1412, "tienda": "EL HIGO MERCADO C", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 8, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "TUXPAN", "idTienda": 2945, "tienda": "CERRO AZUL", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 8, "existCajas": 1}, {"region": "VERACRUZ CENTRO", "zona": "TEZIUTLAN", "idTienda": 2920, "tienda": "TEZIUTLAN", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 8, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "PAPANTLA", "idTienda": 8949, "tienda": "COYUTLA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 8, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "GUTIERREZ ZAMORA", "idTienda": 8960, "tienda": "ZAMORA VERACRUZ", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 8, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "POZA RICA", "idTienda": 9101, "tienda": "CAZONES", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 8, "existCajas": 1}, {"region": "VERACRUZ SUR", "zona": "CORDOBA", "idTienda": 435, "tienda": "LA PERLA CENTRO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 7, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "HUEJUTLA", "idTienda": 787, "tienda": "CHICONTEPEC VERACRUZ", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 7, "existCajas": 1}, {"region": "VERACRUZ SUR", "zona": "PINERA", "idTienda": 1235, "tienda": "TUXTEPEC", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 7, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "POZA RICA", "idTienda": 1289, "tienda": "TANTOYUCA MI MERCADO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 7, "existCajas": 1}, {"region": "VERACRUZ SUR", "zona": "TUXTLAS", "idTienda": 1664, "tienda": "LERDO CARRETERA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 7, "existCajas": 1}, {"region": "VERACRUZ CENTRO", "zona": "XALAPA", "idTienda": 8966, "tienda": "JILOTEPEC", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 7, "existCajas": 1}, {"region": "VERACRUZ NORTE", "zona": "HUAUCHINANGO", "idTienda": 915, "tienda": "NUEVO NECAXA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 6, "existCajas": 1}, {"region": "VERACRUZ SUR", "zona": "ALVARADO", "idTienda": 2855, "tienda": "CARLOS A. CARRILLO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 6, "existCajas": 1}, {"region": "VERACRUZ CENTRO", "zona": "XALAPA", "idTienda": 1796, "tienda": "BOCA NEGRA ABASTO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 6, "existCajas": 1}, {"region": "VERACRUZ SUR", "zona": "CAFETALERA", "idTienda": 8964, "tienda": "CORDOBA SAN MIGUEL", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 6, "existCajas": 1}, {"region": "VERACRUZ CENTRO", "zona": "COSTA ESMERALDA", "idTienda": 260, "tienda": "JUCHIQUE", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 5, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "ORIZABA", "idTienda": 313, "tienda": "LA MIXTEQUILLA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 5, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "TEZIUTLAN", "idTienda": 337, "tienda": "CHIGNAUTLA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 5, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "ORIZABA", "idTienda": 877, "tienda": "CUITLAHUAC SAN PEDRO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 5, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "TUXPAN", "idTienda": 1272, "tienda": "TUXPAN AMERICAS", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 5, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "PORTUARIA", "idTienda": 1145, "tienda": "OASIS SONORA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 5, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "ORIZABA", "idTienda": 1555, "tienda": "JOACHIN CENTRO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 5, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "HEROICA", "idTienda": 2863, "tienda": "SOLEDAD DE DOBLADO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 5, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "TANTOYUCA", "idTienda": 2860, "tienda": "16 DE SEPTIEMBRE", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 5, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "ALVARADO", "idTienda": 2853, "tienda": "BENITO JUAREZ", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 5, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "XALAPA", "idTienda": 113, "tienda": "LAS TRANCAS", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 4, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "TUXTLAS", "idTienda": 106, "tienda": "ANGEL R CABADA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 4, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "ALVARADO", "idTienda": 447, "tienda": "COSAMALOAPAN MERCADO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 4, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "HEROICA", "idTienda": 419, "tienda": "SOLEDAD DE DOBLADO 5 DE MAYO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 4, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "CORDOBA", "idTienda": 938, "tienda": "ACULTZINGO CENTRO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 4, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "TUXPAN", "idTienda": 912, "tienda": "LA CABRILLA TAMIAHUA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 4, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "TUXTEPEC", "idTienda": 1641, "tienda": "GRAJALES TUXTEPEC", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 4, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "GUTIERREZ ZAMORA", "idTienda": 1652, "tienda": "KAWATZIN COLONIA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 4, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "HUAUCHINANGO", "idTienda": 3114, "tienda": "XICOTEPEC", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 4, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "COSTA ESMERALDA", "idTienda": 8935, "tienda": "VEGA DE ALATORRE", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 4, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "TEZIUTLAN", "idTienda": 9084, "tienda": "TEZIUTLAN HIDALGO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 4, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "COATEPEC", "idTienda": 272, "tienda": "COATEPEC MERCADO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 3, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "PAPANTLA", "idTienda": 236, "tienda": "PAPANTLA CENTRO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 3, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "CUENCA", "idTienda": 270, "tienda": "TIERRA BLANCA MERCADO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 3, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "TEZIUTLAN", "idTienda": 122, "tienda": "TEZIUTLAN LERDO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 3, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "GUTIERREZ ZAMORA", "idTienda": 541, "tienda": "TECOLUTLA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 3, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "CARDEL", "idTienda": 705, "tienda": "CARRIZAL ZAPATA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 3, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "CARDEL", "idTienda": 853, "tienda": "PALMA SOLA VERACRUZ", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 3, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "TAMPICO NORTE", "idTienda": 876, "tienda": "PANUCO MERCADO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 3, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "COSTA ESMERALDA", "idTienda": 1016, "tienda": "MISANTLA E ALATRISTE", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 3, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "COATEPEC", "idTienda": 1237, "tienda": "TLALTETELA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 3, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "TAMPICO NORTE", "idTienda": 1129, "tienda": "TAMPICO MERCADO NORTE", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 3, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "CORDOBA", "idTienda": 1583, "tienda": "CAMERINO Z MENDOZA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 3, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "PORTUARIA", "idTienda": 3555, "tienda": "DIAZ MIRON", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 3, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "POZA RICA", "idTienda": 643, "tienda": "POZA RICA AVILA CAMACHO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 2, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "HEROICA", "idTienda": 886, "tienda": "TEJERIA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 2, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "ORIZABA", "idTienda": 1247, "tienda": "YANGA CALLE 8", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 2, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "HUEJUTLA", "idTienda": 1236, "tienda": "HUEJUTLA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 2, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "ALVARADO", "idTienda": 1740, "tienda": "LA LAGUNA 2", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 2, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "CORDOBA", "idTienda": 7230, "tienda": "ORIZABA CANADA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 2, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "GUTIERREZ ZAMORA", "idTienda": 6460, "tienda": "GUTIERREZ ZAMORA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 2, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "TUXTLAS", "idTienda": 7254, "tienda": "CATEMACO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 2, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "PINERA", "idTienda": 478, "tienda": "ALDAMA TUXTEPEC", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 1, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "PUERTO", "idTienda": 562, "tienda": "PUENTE MORENO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 1, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "CARDEL", "idTienda": 702, "tienda": "CARDEL REVOLUCION", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 1, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "TAMPICO SUR", "idTienda": 1249, "tienda": "NUEVO TAMPICO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 1, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "PORTUARIA", "idTienda": 1264, "tienda": "VALLE GAVIOTA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 1, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "TAMPICO SUR", "idTienda": 1092, "tienda": "ALDAMA LIBERTAD", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 1, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "HEROICA", "idTienda": 1392, "tienda": "MANLIO BENITO JUAREZ", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 1, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "XALAPA", "idTienda": 1417, "tienda": "CENTRAL CARAM", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 1, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "HEROICA", "idTienda": 1545, "tienda": "ARISTA Y GLADIOLAS", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 1, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "HUAUCHINANGO", "idTienda": 1683, "tienda": "RAFAEL CRAVIOTO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 1, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "PORTUARIA", "idTienda": 1689, "tienda": "RIO SAN ISIDRO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 1, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "CUENCA", "idTienda": 7235, "tienda": "TIERRA BLANCA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 1, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "CARDEL", "idTienda": 8940, "tienda": "MERCADITO CARDEL", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 1, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "PUERTO", "idTienda": 8958, "tienda": "Paso del Toro", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 1, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "XALAPA", "idTienda": 8963, "tienda": "CASTILLO JALAPA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 1, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "BOCA DEL RIO", "idTienda": 8927, "tienda": "JUAN SOTO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 1, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "CORDOBA", "idTienda": 259, "tienda": "JALAPILLA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "TUXPAN", "idTienda": 253, "tienda": "TAMALIN", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "XALAPA", "idTienda": 156, "tienda": "LAS VIGAS VER", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "XALAPA", "idTienda": 207, "tienda": "ATENAS VERACRUZANA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "ORIZABA", "idTienda": 265, "tienda": "CAMALOTE", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "TEZIUTLAN", "idTienda": 121, "tienda": "JALACINGO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "BOCA DEL RIO", "idTienda": 347, "tienda": "AV QUEVEDO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "ORIZABA", "idTienda": 436, "tienda": "TLALIXCOYAN 1", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "CARDEL", "idTienda": 415, "tienda": "ACTOPAN SAN FRANCISCO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "CAFETALERA", "idTienda": 443, "tienda": "TOTUTLA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "CUENCA", "idTienda": 515, "tienda": "LOS NARANJOS VERACRUZ", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "BOCA DEL RIO", "idTienda": 737, "tienda": "EL MORRO VERACRUZ", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "ALAMO", "idTienda": 782, "tienda": "TEPETZINTLA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "CUENCA", "idTienda": 776, "tienda": "CERVECERA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "HUEJUTLA", "idTienda": 671, "tienda": "ATLAPEXCO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "TUXTEPEC", "idTienda": 707, "tienda": "EL RUBI", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "TAMPICO SUR", "idTienda": 751, "tienda": "MANGOS ALTAMIRA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "ALAMO", "idTienda": 574, "tienda": "ALAMO INDEPENDENCIA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "COSTA ESMERALDA", "idTienda": 637, "tienda": "NAUTLA MARACAIBO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "TAMPICO SUR", "idTienda": 829, "tienda": "MANTE SUZUKI", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "CORDOBA", "idTienda": 862, "tienda": "FORTIN PARQUE", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "TAMPICO NORTE", "idTienda": 875, "tienda": "TAMPICO MERCADO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "BOCA DEL RIO", "idTienda": 932, "tienda": "J B LOBOS", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "BOCA DEL RIO", "idTienda": 821, "tienda": "BOCA DEL RIO CENTRO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "PORTUARIA", "idTienda": 823, "tienda": "INTERCOLONIA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "HUEJUTLA", "idTienda": 834, "tienda": "ORIZATLAN HIDALGO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "TUXTEPEC", "idTienda": 1244, "tienda": "JALAPA DE DIAZ JUAREZ", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "BOCA DEL RIO", "idTienda": 1261, "tienda": "VISTAMAR", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "PUERTO", "idTienda": 1174, "tienda": "TORTUGA PUENTE MORENO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "CORDOBA", "idTienda": 1205, "tienda": "TEQUILA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "TUXPAN", "idTienda": 1056, "tienda": "OZULUAMA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "PAPANTLA", "idTienda": 1283, "tienda": "COXQUIHUI HIDALGO Y RAYON", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "MTZ DE LA TORRE", "idTienda": 1286, "tienda": "EL PASO TANTOYUCA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "PORTUARIA", "idTienda": 1292, "tienda": "XANA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "CORDOBA", "idTienda": 1313, "tienda": "CABADA GANADERA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "POZA RICA", "idTienda": 1318, "tienda": "LAS VEGAS OBREGON", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "TUXTEPEC", "idTienda": 1383, "tienda": "TUXTEPEC 5 DE MAYO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "CUENCA", "idTienda": 1395, "tienda": "AYOTZINTEPEC", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "ORIZABA", "idTienda": 1515, "tienda": "AMATLAN REYES", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "PUERTO", "idTienda": 1527, "tienda": "AMERICA PUENTE MORENO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "PAPANTLA", "idTienda": 1535, "tienda": "AGUA DULCE PARQUE", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "GUTIERREZ ZAMORA", "idTienda": 1576, "tienda": "MATAMOROS POZA RICA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "TUXTLAS", "idTienda": 1605, "tienda": "SAN ANDRES CENTRO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "ALAMO", "idTienda": 1648, "tienda": "COLATLAN", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "POZA RICA", "idTienda": 1653, "tienda": "NACIONAL POZA RICA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "TAMPICO SUR", "idTienda": 1715, "tienda": "COCOTERO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "PINERA", "idTienda": 1731, "tienda": "EL CONEJO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "TANTOYUCA", "idTienda": 1732, "tienda": "TANTOYUCA CENTRO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "COATEPEC", "idTienda": 3371, "tienda": "COATEPEC CENTRO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "CAFETALERA", "idTienda": 3544, "tienda": "CORDOBA AV 11", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "TUXTLAS", "idTienda": 2869, "tienda": "REVOLUCION SOCIAL", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "TUXTLAS", "idTienda": 1811, "tienda": "TETILA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "PORTUARIA", "idTienda": 1822, "tienda": "RESERVA II", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "CAFETALERA", "idTienda": 7236, "tienda": "COSCOMATEPEC", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "BOCA DEL RIO", "idTienda": 5961, "tienda": "BOCA DEL RIO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "PUERTO", "idTienda": 8905, "tienda": "EL TEJAR", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "TEZIUTLAN", "idTienda": 9052, "tienda": "TEZIUTLAN 16 DE SEPTIEMBRE", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "CAFETALERA", "idTienda": 9014, "tienda": "HUATUSCO", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "CAFETALERA", "idTienda": 9017, "tienda": "CHOCAMAN", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "CUENCA", "idTienda": 8957, "tienda": "TRES VALLES", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "HEROICA", "idTienda": 8961, "tienda": "LAZARO CARDENAS", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "ALVARADO", "idTienda": 8962, "tienda": "ALVARADO CENTRAL", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "TUXTLAS", "idTienda": 9112, "tienda": "MANUEL DE LA CABADA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "VERACRUZ", "idTienda": 9059, "tienda": "PEMEX TIERRA BLANCA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "PAPANTLA", "idTienda": 9034, "tienda": "PAPANTLA 16 DE SEPTIEMBRE", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": 0, "existCajas": 0}, {"region": "VERACRUZ NORTE", "zona": "HUEJUTLA", "idTienda": 1552, "tienda": "TEHUETLAN", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": -1, "existCajas": 0}, {"region": "VERACRUZ CENTRO", "zona": "BOCA DEL RIO", "idTienda": 9029, "tienda": "PAGES", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": -1, "existCajas": 0}, {"region": "VERACRUZ SUR", "zona": "TUXTLAS", "idTienda": 9038, "tienda": "SANTIAGO TUXTLA", "articulo": "Tostada Best Choice Horneada 300 G", "idArticulo": 6060004520, "existPiezas": -2, "existCajas": 0}];
+// Formato compacto: [región, zona, idTienda, tienda, existPiezas, existCajas]
+// Región: N = Veracruz Norte, C = Veracruz Centro, S = Veracruz Sur
+const ARTICULO = "Tostada Best Choice Horneada 300 G";
+const ID_ARTICULO = 6060004520;
+const REGION_MAP = {N:"VERACRUZ NORTE", C:"VERACRUZ CENTRO", S:"VERACRUZ SUR"};
+const RAW = [
+["N","TANTOYUCA",2858,"TANTOYUCA",41,3],
+["N","TANTOYUCA",1792,"MI TANTOYUCA",36,3],
+["N","TANTOYUCA",622,"TEMPOAL",33,3],
+["S","CORDOBA",335,"COSOLAPA MERCADO",27,2],
+["S","PINERA",333,"LOMA BONITA MERCADO",27,2],
+["N","TANTOYUCA",760,"TANTOYUCA CALLE 12 DE JULIO",25,2],
+["C","COSTA ESMERALDA",2867,"MISANTLA",25,2],
+["N","PAPANTLA",266,"HUEHUETLA",24,2],
+["S","PINERA",734,"TUXTEPEC HIDALGO",24,2],
+["N","HUAUCHINANGO",4509,"HUAUCHINANGO",23,2],
+["C","BOCA DEL RIO",565,"CALLE 8 COL CARRANZA",22,2],
+["N","TAMPICO SUR",1246,"MADERO SANTA ELENA",22,2],
+["C","XALAPA",1125,"COACOATZINTLA VER",22,2],
+["C","TEZIUTLAN",2520,"ALTOTONGA",22,2],
+["S","ALVARADO",2856,"ALVARADO",22,2],
+["C","COSTA ESMERALDA",735,"CASITAS VERACRUZ",21,2],
+["S","PUERTO",1637,"LOS LAGOS",20,2],
+["S","CUENCA",315,"TEMASCAL",19,2],
+["S","PINERA",520,"TUXTEPEC CARRANZA",19,2],
+["N","HUAUCHINANGO",9040,"CEIBA",19,2],
+["C","PORTUARIA",214,"PLAYA LINDA",18,2],
+["S","TUXTEPEC",364,"VALLE NACIONAL",18,2],
+["C","COSTA ESMERALDA",673,"INDEPENDENCIA MARTINEZ",18,2],
+["N","TUXPAN",1009,"CERRO AZUL LA CURVA",18,2],
+["N","TAMPICO SUR",1094,"ALTAMIRA LAGUNA",18,2],
+["S","ALVARADO",1530,"CARRILLO CRUCERO",18,2],
+["S","PINERA",1785,"LOMA BONITA CENTRO",18,2],
+["C","XALAPA",2857,"EBANO",18,2],
+["N","POZA RICA",223,"PASEO LA BURRITA",17,1],
+["C","TEZIUTLAN",2864,"TLAPACOYAN",17,1],
+["C","COSTA ESMERALDA",8932,"MARTINEZ DE LA TORRE",17,1],
+["S","PUERTO",503,"JAMAPA ORIENTE",16,1],
+["C","COSTA ESMERALDA",703,"CARRANZA 5 DE MAYO",16,1],
+["N","HUAUCHINANGO",879,"METLALTOYUCA",16,1],
+["N","POZA RICA",1259,"AGUA FRIA KIOSKO",16,1],
+["N","PAPANTLA",1152,"PAPANTLA",16,1],
+["N","ALAMO",1316,"IXHUATLAN CENTRO",16,1],
+["S","ALVARADO",2845,"TLACOTALPAN",16,1],
+["N","PAPANTLA",254,"ENTABLADERO BENITO JUAREZ",15,1],
+["S","TUXTEPEC",493,"TUXTEPEC CENTRO 2",15,1],
+["N","PAPANTLA",502,"ZOZOCOLCO CENTRO",15,1],
+["C","TEZIUTLAN",618,"ALTOTONGA HIDALGO",15,1],
+["C","COATEPEC",812,"COSAUTLAN VERACRUZ",15,1],
+["N","HUEJUTLA",1426,"HUEJUTLA MERCADO",15,1],
+["N","TUXPAN",2868,"NARANJOS",15,1],
+["C","XALAPA",240,"ALTO LUCERO",14,1],
+["S","ORIZABA",371,"ACATLAN CENTRO",14,1],
+["C","COSTA ESMERALDA",736,"MARIA DE LA TORRE",14,1],
+["N","PAPANTLA",652,"FILOMENO MATA 5 DE MAYO",14,1],
+["S","TUXTEPEC",1157,"SAN JOSE CHILTEPEC",14,1],
+["S","CAFETALERA",1742,"MONTE BLANCO CENTRO",14,1],
+["N","ALAMO",2865,"ALAMO",14,1],
+["C","COATEPEC",9021,"LAGOS",14,1],
+["C","XALAPA",263,"NAOLINCO",13,1],
+["C","COATEPEC",125,"TEOCELO 5 DE MAYO",13,1],
+["C","XALAPA",591,"PEROTE ALDAMA",13,1],
+["N","TAMPICO SUR",986,"ESTACION MANUEL",13,1],
+["N","HUAUCHINANGO",1307,"MECAPALAPA PUEBLA",13,1],
+["C","CARDEL",1349,"TIERRA COLORADA VER",13,1],
+["N","TAMPICO NORTE",1404,"TAMPICO CALLE HEROES CENTRO",13,1],
+["N","TUXPAN",9023,"TUXPAN RADIO",13,1],
+["C","PORTUARIA",338,"RIO MEDIO 4",12,1],
+["S","CAFETALERA",571,"POTRERO NUEVO",12,1],
+["N","HUEJUTLA",721,"JALTOCAN",12,1],
+["C","HEROICA",1020,"AMAPOLAS PUERTO",12,1],
+["N","TUXPAN",1209,"TUXPAN LOS CABOS",12,1],
+["S","PUERTO",1355,"ANTON LIZARDO AZUETA II",12,1],
+["N","HUEJUTLA",1497,"CHICONTEPEC CENTRO",12,1],
+["C","PORTUARIA",1559,"LA ROTONDA",12,1],
+["N","HUEJUTLA",1597,"HUEJUTLA CHACATITLA",12,1],
+["N","ALAMO",9049,"LLANO EN MEDIO",12,1],
+["C","CARDEL",9019,"Cempoala",12,1],
+["N","GUTIERREZ ZAMORA",9080,"MARIANO ARISTA",12,1],
+["N","HUAUCHINANGO",9067,"LA UNO 12 DE DICIEMBRE",12,1],
+["C","XALAPA",111,"XALAPA",11,1],
+["S","PUERTO",575,"COTAXTLA JUAREZ",11,1],
+["S","CORDOBA",1012,"MALTRATA",11,1],
+["N","TAMPICO NORTE",959,"TAMPICO PALAFOX",11,1],
+["N","TUXPAN",931,"MERCADO HEROES 47 TUXPAN",11,1],
+["S","CORDOBA",1153,"TEZONAPA",11,1],
+["S","CAFETALERA",1502,"AV 6 CORDOBA",11,1],
+["S","ORIZABA",1659,"CUICHAPA CENTRO",11,1],
+["C","COATEPEC",8939,"GALVAN",11,1],
+["N","POZA RICA",9037,"LA BURRITA MERCADO",11,1],
+["S","PINERA",9046,"TUXTEPEC JUAREZ",11,1],
+["N","ALAMO",9097,"TIHUATLAN",11,1],
+["N","ALAMO",566,"TIHUATLAN CUAUHTEMOC",10,1],
+["N","GUTIERREZ ZAMORA",1158,"REFORMA COATZINTLA",10,1],
+["N","POZA RICA",1504,"ABASTO PLAN DE AYALA",10,1],
+["S","ALVARADO",3455,"COSAMALOAPAN",10,1],
+["S","CUENCA",1844,"SAN BARTOLO",10,1],
+["C","COATEPEC",9011,"MARIANO ABASOLO",10,1],
+["S","PINERA",147,"JOSE AZUETA",9,1],
+["C","COATEPEC",135,"MARTIRES DEL 28",9,1],
+["S","CAFETALERA",471,"PASO DEL MACHO",9,1],
+["C","COATEPEC",504,"TLALNEHUAYOCAN",9,1],
+["N","TAMPICO NORTE",369,"PANUCO ABASTO",9,1],
+["C","COSTA ESMERALDA",704,"REVOLUCION SAN RAFAEL",9,1],
+["C","PORTUARIA",822,"MATAMOROS PINOS",9,1],
+["S","CUENCA",1438,"TIERRA BLANCA PLAZA CENTRO",9,1],
+["S","CAFETALERA",7231,"Cordoba Mercado",9,1],
+["N","PAPANTLA",9048,"NINO ARTILLERO",9,1],
+["S","ORIZABA",8953,"PIEDRAS NEGRAS",9,1],
+["S","ALVARADO",9094,"ALVARADO MERCADO",9,1],
+["C","TEZIUTLAN",352,"HUEYTAMALCO",8,1],
+["C","CARDEL",426,"PASO DE OVEJAS INSURGENTES 1",8,1],
+["S","TUXTEPEC",680,"OJITLAN II",8,1],
+["N","TANTOYUCA",592,"PLATON SANCHEZ",8,1],
+["C","HEROICA",1002,"DOS LOMAS",8,1],
+["N","TUXPAN",1187,"PUEBLO VIEJO",8,1],
+["N","GUTIERREZ ZAMORA",1321,"LA PETROMEX",8,1],
+["N","ALAMO",1411,"IXCATEPEC",8,1],
+["N","TANTOYUCA",1412,"EL HIGO MERCADO C",8,1],
+["N","TUXPAN",2945,"CERRO AZUL",8,1],
+["C","TEZIUTLAN",2920,"TEZIUTLAN",8,1],
+["N","PAPANTLA",8949,"COYUTLA",8,1],
+["N","GUTIERREZ ZAMORA",8960,"ZAMORA VERACRUZ",8,1],
+["N","POZA RICA",9101,"CAZONES",8,1],
+["S","CORDOBA",435,"LA PERLA CENTRO",7,1],
+["N","HUEJUTLA",787,"CHICONTEPEC VERACRUZ",7,1],
+["S","PINERA",1235,"TUXTEPEC",7,1],
+["N","POZA RICA",1289,"TANTOYUCA MI MERCADO",7,1],
+["S","TUXTLAS",1664,"LERDO CARRETERA",7,1],
+["C","XALAPA",8966,"JILOTEPEC",7,1],
+["N","HUAUCHINANGO",915,"NUEVO NECAXA",6,1],
+["S","ALVARADO",2855,"CARLOS A. CARRILLO",6,1],
+["C","XALAPA",1796,"BOCA NEGRA ABASTO",6,1],
+["S","CAFETALERA",8964,"CORDOBA SAN MIGUEL",6,1],
+["C","COSTA ESMERALDA",260,"JUCHIQUE",5,0],
+["S","ORIZABA",313,"LA MIXTEQUILLA",5,0],
+["C","TEZIUTLAN",337,"CHIGNAUTLA",5,0],
+["S","ORIZABA",877,"CUITLAHUAC SAN PEDRO",5,0],
+["N","TUXPAN",1272,"TUXPAN AMERICAS",5,0],
+["C","PORTUARIA",1145,"OASIS SONORA",5,0],
+["S","ORIZABA",1555,"JOACHIN CENTRO",5,0],
+["C","HEROICA",2863,"SOLEDAD DE DOBLADO",5,0],
+["N","TANTOYUCA",2860,"16 DE SEPTIEMBRE",5,0],
+["S","ALVARADO",2853,"BENITO JUAREZ",5,0],
+["C","XALAPA",113,"LAS TRANCAS",4,0],
+["S","TUXTLAS",106,"ANGEL R CABADA",4,0],
+["S","ALVARADO",447,"COSAMALOAPAN MERCADO",4,0],
+["C","HEROICA",419,"SOLEDAD DE DOBLADO 5 DE MAYO",4,0],
+["S","CORDOBA",938,"ACULTZINGO CENTRO",4,0],
+["N","TUXPAN",912,"LA CABRILLA TAMIAHUA",4,0],
+["S","TUXTEPEC",1641,"GRAJALES TUXTEPEC",4,0],
+["N","GUTIERREZ ZAMORA",1652,"KAWATZIN COLONIA",4,0],
+["N","HUAUCHINANGO",3114,"XICOTEPEC",4,0],
+["C","COSTA ESMERALDA",8935,"VEGA DE ALATORRE",4,0],
+["C","TEZIUTLAN",9084,"TEZIUTLAN HIDALGO",4,0],
+["C","COATEPEC",272,"COATEPEC MERCADO",3,0],
+["N","PAPANTLA",236,"PAPANTLA CENTRO",3,0],
+["S","CUENCA",270,"TIERRA BLANCA MERCADO",3,0],
+["C","TEZIUTLAN",122,"TEZIUTLAN LERDO",3,0],
+["N","GUTIERREZ ZAMORA",541,"TECOLUTLA",3,0],
+["C","CARDEL",705,"CARRIZAL ZAPATA",3,0],
+["C","CARDEL",853,"PALMA SOLA VERACRUZ",3,0],
+["N","TAMPICO NORTE",876,"PANUCO MERCADO",3,0],
+["C","COSTA ESMERALDA",1016,"MISANTLA E ALATRISTE",3,0],
+["C","COATEPEC",1237,"TLALTETELA",3,0],
+["N","TAMPICO NORTE",1129,"TAMPICO MERCADO NORTE",3,0],
+["S","CORDOBA",1583,"CAMERINO Z MENDOZA",3,0],
+["C","PORTUARIA",3555,"DIAZ MIRON",3,0],
+["N","POZA RICA",643,"POZA RICA AVILA CAMACHO",2,0],
+["C","HEROICA",886,"TEJERIA",2,0],
+["S","ORIZABA",1247,"YANGA CALLE 8",2,0],
+["N","HUEJUTLA",1236,"HUEJUTLA",2,0],
+["S","ALVARADO",1740,"LA LAGUNA 2",2,0],
+["S","CORDOBA",7230,"ORIZABA CANADA",2,0],
+["N","GUTIERREZ ZAMORA",6460,"GUTIERREZ ZAMORA",2,0],
+["S","TUXTLAS",7254,"CATEMACO",2,0],
+["S","PINERA",478,"ALDAMA TUXTEPEC",1,0],
+["S","PUERTO",562,"PUENTE MORENO",1,0],
+["C","CARDEL",702,"CARDEL REVOLUCION",1,0],
+["N","TAMPICO SUR",1249,"NUEVO TAMPICO",1,0],
+["C","PORTUARIA",1264,"VALLE GAVIOTA",1,0],
+["N","TAMPICO SUR",1092,"ALDAMA LIBERTAD",1,0],
+["C","HEROICA",1392,"MANLIO BENITO JUAREZ",1,0],
+["C","XALAPA",1417,"CENTRAL CARAM",1,0],
+["C","HEROICA",1545,"ARISTA Y GLADIOLAS",1,0],
+["N","HUAUCHINANGO",1683,"RAFAEL CRAVIOTO",1,0],
+["C","PORTUARIA",1689,"RIO SAN ISIDRO",1,0],
+["S","CUENCA",7235,"TIERRA BLANCA",1,0],
+["C","CARDEL",8940,"MERCADITO CARDEL",1,0],
+["S","PUERTO",8958,"Paso del Toro",1,0],
+["C","XALAPA",8963,"CASTILLO JALAPA",1,0],
+["C","BOCA DEL RIO",8927,"JUAN SOTO",1,0],
+["S","CORDOBA",259,"JALAPILLA",0,0],
+["N","TUXPAN",253,"TAMALIN",0,0],
+["C","XALAPA",156,"LAS VIGAS VER",0,0],
+["C","XALAPA",207,"ATENAS VERACRUZANA",0,0],
+["S","ORIZABA",265,"CAMALOTE",0,0],
+["C","TEZIUTLAN",121,"JALACINGO",0,0],
+["C","BOCA DEL RIO",347,"AV QUEVEDO",0,0],
+["S","ORIZABA",436,"TLALIXCOYAN 1",0,0],
+["C","CARDEL",415,"ACTOPAN SAN FRANCISCO",0,0],
+["S","CAFETALERA",443,"TOTUTLA",0,0],
+["S","CUENCA",515,"LOS NARANJOS VERACRUZ",0,0],
+["C","BOCA DEL RIO",737,"EL MORRO VERACRUZ",0,0],
+["N","ALAMO",782,"TEPETZINTLA",0,0],
+["S","CUENCA",776,"CERVECERA",0,0],
+["N","HUEJUTLA",671,"ATLAPEXCO",0,0],
+["S","TUXTEPEC",707,"EL RUBI",0,0],
+["N","TAMPICO SUR",751,"MANGOS ALTAMIRA",0,0],
+["N","ALAMO",574,"ALAMO INDEPENDENCIA",0,0],
+["C","COSTA ESMERALDA",637,"NAUTLA MARACAIBO",0,0],
+["N","TAMPICO SUR",829,"MANTE SUZUKI",0,0],
+["S","CORDOBA",862,"FORTIN PARQUE",0,0],
+["N","TAMPICO NORTE",875,"TAMPICO MERCADO",0,0],
+["C","BOCA DEL RIO",932,"J B LOBOS",0,0],
+["C","BOCA DEL RIO",821,"BOCA DEL RIO CENTRO",0,0],
+["C","PORTUARIA",823,"INTERCOLONIA",0,0],
+["N","HUEJUTLA",834,"ORIZATLAN HIDALGO",0,0],
+["S","TUXTEPEC",1244,"JALAPA DE DIAZ JUAREZ",0,0],
+["C","BOCA DEL RIO",1261,"VISTAMAR",0,0],
+["S","PUERTO",1174,"TORTUGA PUENTE MORENO",0,0],
+["S","CORDOBA",1205,"TEQUILA",0,0],
+["N","TUXPAN",1056,"OZULUAMA",0,0],
+["N","PAPANTLA",1283,"COXQUIHUI HIDALGO Y RAYON",0,0],
+["N","MTZ DE LA TORRE",1286,"EL PASO TANTOYUCA",0,0],
+["C","PORTUARIA",1292,"XANA",0,0],
+["S","CORDOBA",1313,"CABADA GANADERA",0,0],
+["N","POZA RICA",1318,"LAS VEGAS OBREGON",0,0],
+["S","TUXTEPEC",1383,"TUXTEPEC 5 DE MAYO",0,0],
+["S","CUENCA",1395,"AYOTZINTEPEC",0,0],
+["S","ORIZABA",1515,"AMATLAN REYES",0,0],
+["S","PUERTO",1527,"AMERICA PUENTE MORENO",0,0],
+["N","PAPANTLA",1535,"AGUA DULCE PARQUE",0,0],
+["N","GUTIERREZ ZAMORA",1576,"MATAMOROS POZA RICA",0,0],
+["S","TUXTLAS",1605,"SAN ANDRES CENTRO",0,0],
+["N","ALAMO",1648,"COLATLAN",0,0],
+["N","POZA RICA",1653,"NACIONAL POZA RICA",0,0],
+["N","TAMPICO SUR",1715,"COCOTERO",0,0],
+["S","PINERA",1731,"EL CONEJO",0,0],
+["N","TANTOYUCA",1732,"TANTOYUCA CENTRO",0,0],
+["C","COATEPEC",3371,"COATEPEC CENTRO",0,0],
+["S","CAFETALERA",3544,"CORDOBA AV 11",0,0],
+["S","TUXTLAS",2869,"REVOLUCION SOCIAL",0,0],
+["S","TUXTLAS",1811,"TETILA",0,0],
+["C","PORTUARIA",1822,"RESERVA II",0,0],
+["S","CAFETALERA",7236,"COSCOMATEPEC",0,0],
+["C","BOCA DEL RIO",5961,"BOCA DEL RIO",0,0],
+["S","PUERTO",8905,"EL TEJAR",0,0],
+["C","TEZIUTLAN",9052,"TEZIUTLAN 16 DE SEPTIEMBRE",0,0],
+["S","CAFETALERA",9014,"HUATUSCO",0,0],
+["S","CAFETALERA",9017,"CHOCAMAN",0,0],
+["S","CUENCA",8957,"TRES VALLES",0,0],
+["C","HEROICA",8961,"LAZARO CARDENAS",0,0],
+["S","ALVARADO",8962,"ALVARADO CENTRAL",0,0],
+["S","TUXTLAS",9112,"MANUEL DE LA CABADA",0,0],
+["S","VERACRUZ",9059,"PEMEX TIERRA BLANCA",0,0],
+["N","PAPANTLA",9034,"PAPANTLA 16 DE SEPTIEMBRE",0,0],
+["N","HUEJUTLA",1552,"TEHUETLAN",-1,0],
+["C","BOCA DEL RIO",9029,"PAGES",-1,0],
+["S","TUXTLAS",9038,"SANTIAGO TUXTLA",-2,0]
+];
+
+const STORES = RAW.map(r => ({
+  region: REGION_MAP[r[0]],
+  zona: r[1],
+  idTienda: r[2],
+  tienda: r[3],
+  articulo: ARTICULO,
+  idArticulo: ID_ARTICULO,
+  existPiezas: r[4],
+  existCajas: r[5]
+}));
 
 const firebaseConfig = {
   apiKey: "AIzaSyCfNACLnEByyBAksA-egxMqKMmvIg5nokg",
@@ -346,7 +632,7 @@ const db = firebase.firestore();
 const statusDocRef = db.collection('checklist').doc('status');
 const photosCollection = db.collection('photos');
 
-let statusMap = {}; // idTienda -> {confirmed, confirmedAt, confirmadoPor, notas, hasPhoto, piezasDevueltas, cajasDevueltas}
+let statusMap = {}; // idTienda -> {confirmed, confirmedAt, confirmadoPor, notas, hasPhoto, piezasDevueltas, cajasDevueltas, descargadoBrisa, descargadoBrisaAt}
 let collapsedRegions = new Set();
 let currentModalStore = null;
 let pendingPhotoBase64 = null;
@@ -405,6 +691,10 @@ function titleCase(s){
   return s.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
 }
 
+function fmtDate(iso){
+  return new Date(iso).toLocaleString('es-MX', {dateStyle:'medium', timeStyle:'short'});
+}
+
 function getFiltered(){
   const q = el('searchInput').value.trim().toLowerCase();
   const region = el('regionFilter').value;
@@ -415,6 +705,8 @@ function getFiltered(){
     const confirmed = !!(st && st.confirmed);
     if(status === 'pending' && confirmed) return false;
     if(status === 'confirmed' && !confirmed) return false;
+    if(status === 'brisa_pending' && !(confirmed && !st.descargadoBrisa)) return false;
+    if(status === 'brisa_done' && !(st && st.descargadoBrisa)) return false;
     if(q){
       const hay = (s.tienda + ' ' + s.idTienda + ' ' + s.zona).toLowerCase();
       if(!hay.includes(q)) return false;
@@ -492,6 +784,9 @@ function storeCardHtml(s){
       <div class="store-meta">
         <span>ID <b>${s.idTienda}</b></span>
         <span class="zona-tag">${escHtml(titleCase(s.zona))}</span>
+        ${confirmed ? (st.descargadoBrisa
+          ? '<span class="brisa-tag">✓ BRISA</span>'
+          : '<span class="brisa-tag off">BRISA pendiente</span>') : ''}
       </div>
     </div>
     <div class="exist-badge">
@@ -556,6 +851,12 @@ function renderPendingView(){
     <div class="field-label">Notas <span style="font-weight:400;color:var(--text-mut)">(opcional)</span></div>
     <textarea id="notas" placeholder="Observaciones sobre el retiro o resguardo…"></textarea>
 
+    <label class="brisa-check" id="brisaLabel">
+      <input type="checkbox" id="brisaCheck">
+      <span class="t">Descargado en sistema como Mercancía dañada
+        <span class="s">A través de BRISA</span></span>
+    </label>
+
     <div class="modal-footer">
       <button class="btn-big btn-primary" id="confirmBtn">Confirmar resguardo</button>
     </div>
@@ -563,11 +864,17 @@ function renderPendingView(){
   el('photoDrop').addEventListener('click', ()=> el('photoInput').click());
   el('photoInput').addEventListener('change', handlePhotoSelect);
   el('confirmBtn').addEventListener('click', submitConfirmation);
+  el('brisaCheck').addEventListener('change', e=>{
+    el('brisaLabel').classList.toggle('checked', e.target.checked);
+  });
 }
 
 function renderConfirmedView(st){
-  const dateStr = st.confirmedAt ? new Date(st.confirmedAt).toLocaleString('es-MX', {dateStyle:'medium', timeStyle:'short'}) : '';
+  const dateStr = st.confirmedAt ? fmtDate(st.confirmedAt) : '';
   const hasQty = st.piezasDevueltas !== undefined && st.piezasDevueltas !== null;
+  const brisaSub = st.descargadoBrisa && st.descargadoBrisaAt
+    ? 'A través de BRISA · ' + fmtDate(st.descargadoBrisaAt)
+    : 'A través de BRISA';
   el('modalBody').innerHTML = `
     <div class="stamp-wrap"><div class="stamp">✓ Resguardo confirmado</div></div>
     <div class="confirm-meta">${dateStr}${st.confirmadoPor ? ' · ' + escHtml(st.confirmadoPor) : ''}</div>
@@ -578,11 +885,17 @@ function renderConfirmedView(st){
     ` : ''}
 
     <div class="field-label" style="margin-top:18px;">Fotografía de soporte</div>
-    <div class="photo-drop ${st.hasPhoto?'':''}" id="photoViewer" style="cursor:${st.hasPhoto?'pointer':'default'};">
+    <div class="photo-drop" id="photoViewer" style="cursor:${st.hasPhoto?'pointer':'default'};">
       ${st.hasPhoto ? '<div class="hint" id="photoLoadHint">Toca para ver la foto</div>' : '<div class="hint">No se adjuntó fotografía.</div>'}
     </div>
 
     ${st.notas ? `<div class="field-label">Notas</div><div style="font-size:13.5px;color:var(--text-mut);">${escHtml(st.notas)}</div>` : ''}
+
+    <label class="brisa-check ${st.descargadoBrisa?'checked':''}" id="brisaLabel">
+      <input type="checkbox" id="brisaCheck" ${st.descargadoBrisa?'checked':''}>
+      <span class="t">Descargado en sistema como Mercancía dañada
+        <span class="s" id="brisaDate">${brisaSub}</span></span>
+    </label>
 
     <div class="modal-footer">
       <button class="btn-danger-ghost" id="undoBtn">Deshacer confirmación</button>
@@ -592,6 +905,26 @@ function renderConfirmedView(st){
     el('photoViewer').addEventListener('click', ()=> loadAndShowPhoto(currentModalStore.idTienda));
   }
   el('undoBtn').addEventListener('click', undoConfirmation);
+  el('brisaCheck').addEventListener('change', toggleBrisa);
+}
+
+async function toggleBrisa(e){
+  const checked = e.target.checked;
+  const id = currentModalStore.idTienda;
+  const at = checked ? new Date().toISOString() : null;
+  statusMap[id] = { ...statusMap[id], descargadoBrisa: checked, descargadoBrisaAt: at };
+  el('brisaLabel').classList.toggle('checked', checked);
+  el('brisaDate').textContent = checked
+    ? 'A través de BRISA · ' + fmtDate(at)
+    : 'A través de BRISA';
+  try{
+    // merge: solo toca esta tienda, no sobrescribe lo que otros confirmen al mismo tiempo
+    await statusDocRef.set({ [id]: { descargadoBrisa: checked, descargadoBrisaAt: at } }, { merge:true });
+    showToast(checked ? 'Marcada como descargada en BRISA' : 'Check de BRISA quitado');
+  }catch(err){
+    showToast('No se pudo guardar. Intenta de nuevo.');
+  }
+  render();
 }
 
 async function loadAndShowPhoto(idTienda){
@@ -641,6 +974,11 @@ function handlePhotoSelect(e){
 }
 
 async function submitConfirmation(){
+  // Si quieres que el check de BRISA sea obligatorio, descomenta estas 3 líneas:
+  // if(!el('brisaCheck').checked){
+  //   showToast('Marca la descarga en BRISA'); return;
+  // }
+
   const btn = el('confirmBtn');
   btn.disabled = true;
   btn.textContent = 'Guardando…';
@@ -652,6 +990,7 @@ async function submitConfirmation(){
   const cajasRaw = el('cajasDevueltas').value;
   const piezasDevueltas = piezasRaw === '' ? 0 : Math.max(0, parseInt(piezasRaw, 10) || 0);
   const cajasDevueltas = cajasRaw === '' ? 0 : Math.max(0, parseInt(cajasRaw, 10) || 0);
+  const brisa = el('brisaCheck').checked;
 
   statusMap[idTienda] = {
     confirmed: true,
@@ -660,7 +999,9 @@ async function submitConfirmation(){
     notas: notas || null,
     hasPhoto: !!pendingPhotoBase64,
     piezasDevueltas: piezasDevueltas,
-    cajasDevueltas: cajasDevueltas
+    cajasDevueltas: cajasDevueltas,
+    descargadoBrisa: brisa,
+    descargadoBrisaAt: brisa ? new Date().toISOString() : null
   };
 
   if(pendingPhotoBase64){
@@ -739,8 +1080,10 @@ async function exportToExcel(){
         'Piezas devueltas': confirmed ? (st.piezasDevueltas ?? '') : '',
         'Cajas devueltas': confirmed ? (st.cajasDevueltas ?? '') : '',
         'Confirmado por': st.confirmadoPor || '',
-        'Fecha y hora de confirmación': st.confirmedAt ? new Date(st.confirmedAt).toLocaleString('es-MX', {dateStyle:'medium', timeStyle:'short'}) : '',
+        'Fecha y hora de confirmación': st.confirmedAt ? fmtDate(st.confirmedAt) : '',
         'Foto adjunta': confirmed ? (st.hasPhoto ? 'Sí' : 'No') : '',
+        'Descargado BRISA (Merc. dañada)': confirmed ? (st.descargadoBrisa ? 'Sí' : 'No') : '',
+        'Fecha descarga BRISA': st.descargadoBrisaAt ? fmtDate(st.descargadoBrisaAt) : '',
         'Notas': st.notas || ''
       };
     });
@@ -748,11 +1091,13 @@ async function exportToExcel(){
     const totalConfirmed = rows.filter(r => r['Estatus'] === 'Confirmado').length;
     const totalPiezasDevueltas = rows.reduce((sum, r) => sum + (typeof r['Piezas devueltas'] === 'number' ? r['Piezas devueltas'] : 0), 0);
     const totalCajasDevueltas = rows.reduce((sum, r) => sum + (typeof r['Cajas devueltas'] === 'number' ? r['Cajas devueltas'] : 0), 0);
+    const totalBrisa = rows.filter(r => r['Descargado BRISA (Merc. dañada)'] === 'Sí').length;
 
     const ws = XLSX.utils.json_to_sheet(rows);
     ws['!cols'] = [
       {wch:16},{wch:20},{wch:10},{wch:28},{wch:32},{wch:12},
-      {wch:10},{wch:10},{wch:12},{wch:13},{wch:13},{wch:20},{wch:20},{wch:11},{wch:34}
+      {wch:10},{wch:10},{wch:12},{wch:13},{wch:13},{wch:20},{wch:20},{wch:11},
+      {wch:16},{wch:20},{wch:34}
     ];
 
     const wb = XLSX.utils.book_new();
@@ -765,11 +1110,13 @@ async function exportToExcel(){
       {Concepto:'Pendientes', Valor: STORES.length - totalConfirmed},
       {Concepto:'Total piezas devueltas', Valor: totalPiezasDevueltas},
       {Concepto:'Total cajas devueltas', Valor: totalCajasDevueltas},
+      {Concepto:'Descargadas en BRISA', Valor: totalBrisa},
+      {Concepto:'Confirmadas sin descargar en BRISA', Valor: totalConfirmed - totalBrisa},
       {Concepto:'% avance', Valor: Math.round(totalConfirmed/STORES.length*100) + '%'},
-      {Concepto:'Generado', Valor: new Date().toLocaleString('es-MX', {dateStyle:'medium', timeStyle:'short'})}
+      {Concepto:'Generado', Valor: fmtDate(new Date().toISOString())}
     ];
     const wsSummary = XLSX.utils.json_to_sheet(summaryRows);
-    wsSummary['!cols'] = [{wch:20},{wch:34}];
+    wsSummary['!cols'] = [{wch:34},{wch:34}];
     XLSX.utils.book_append_sheet(wb, wsSummary, 'Resumen');
 
     const dateTag = new Date().toISOString().slice(0,10);
